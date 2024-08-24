@@ -1,5 +1,8 @@
 ## 1st watch an interview of Database Schema design.
 
+
+
+
 ### Lets do Schema Design 
 
 ## What do you mean by Database Schem design?
