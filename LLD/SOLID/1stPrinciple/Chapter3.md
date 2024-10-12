@@ -95,9 +95,10 @@ class VideoPlayer extends VideoPlayerInterface {
 ### 6. How does ISP relate to other SOLID principles?
 **Answer:** ISP is closely related to the Single Responsibility Principle (SRP) as both advocate for keeping classes and interfaces focused on a single responsibility. It also complements the Dependency Inversion Principle (DIP) by ensuring that high-level modules are not dependent on low-level modules with unnecessary methods.
 
-I hope these questions and answers help clarify the Interface Segregation Principle for you! If you have any more questions or need further examples, feel free to ask.
 
-Source: Conversation with Copilot, 12/10/2024
+
+## Other resources to practice
+
 (1) Interface Segregation Principle: Everything You Need to Know - Reflectoring. https://reflectoring.io/interface-segregation-principle/.
 (2) Practice Problems for Interface Segregation Principle. https://solidprinciples.org/docs/interface-segregation-principle/practice-problems.
 (3) Interface Segregation Principle in Java with Example - Java Guides. https://www.javaguides.net/2018/02/interface-segregation-principle.html.
