@@ -1,4 +1,3 @@
-Sure! Here's a detailed note on the Interface Segregation Principle (ISP) with an example in JavaScript and an analogy to make it easier to understand and remember.
 
 ---
 
@@ -89,9 +88,7 @@ The Interface Segregation Principle helps in creating more maintainable and unde
 
 ---
 
-I hope this helps you understand the Interface Segregation Principle better! If you have any more questions or need further clarification, feel free to ask.
 
-Source: Conversation with Copilot, 12/10/2024
 (1) Interface Segregation Principle: Everything You Need to Know - Reflectoring. https://reflectoring.io/interface-segregation-principle/.
 (2) Interface Segregation with Code Examples Explained- Stackify. https://stackify.com/interface-segregation-principle/.
 (3) SOLID Principles Series: Embracing the Interface Segregation Principle .... https://dev.to/ruben_alapont/solid-principles-series-embracing-the-interface-segregation-principle-isp-in-typescript-59n6.
