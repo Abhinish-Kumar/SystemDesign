@@ -260,5 +260,127 @@ product1.notify("Laptop price has dropped!");
 
 
 
+# create a notification system
 
+
+```js
+const WebSocket = require('ws');
+
+class Stock {
+    constructor(symbol) {
+        this.symbol = symbol;
+        this.price = 0;
+        this.observers = []; // This will hold WebSocket connections
+    }
+
+    // Add observer (WebSocket connection)
+    addObserver(ws) {
+        this.observers.push(ws);
+    }
+
+    // Remove observer (close WebSocket)
+    removeObserver(ws) {
+        this.observers = this.observers.filter((observer) => observer !== ws);
+    }
+
+    // Notify observers of price change
+    notifyObservers() {
+        const message = JSON.stringify({ symbol: this.symbol, price: this.price });
+        this.observers.forEach((ws) => {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(message);
+            }
+        });
+    }
+
+    // Simulate price update
+    updatePrice(newPrice) {
+        this.price = newPrice;
+        this.notifyObservers();
+    }
+}
+
+const stock = new Stock("AAPL");
+
+// WebSocket Server
+const wss = new WebSocket.Server({ port: 8080 });
+
+wss.on('connection', (ws) => {
+    console.log("New client connected!");
+
+    // Add new connection to observers
+    stock.addObserver(ws);
+
+    // Handle client disconnect
+    ws.on('close', () => {
+        console.log("Client disconnected!");
+        stock.removeObserver(ws);
+    });
+});
+
+// Simulate stock price updates every 5 seconds
+setInterval(() => {
+    const newPrice = (Math.random() * 200).toFixed(2); // Random price between 0 and 200
+    console.log(`Updating price of ${stock.symbol} to $${newPrice}`);
+    stock.updatePrice(parseFloat(newPrice));
+}, 5000);
+
+console.log("WebSocket server is running on ws://localhost:8080");
+
+```
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Notification</title>
+    <style>
+        #notifications {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stock Notification System</h1>
+    <div id="notifications"></div>
+
+    <script>
+        const ws = new WebSocket("ws://localhost:8080");
+
+        ws.onopen = () => {
+            console.log("Connected to the WebSocket server.");
+        };
+
+        ws.onmessage = (event) => {
+            const { symbol, price } = JSON.parse(event.data);
+            const notification = document.createElement("div");
+            notification.textContent = `Price of ${symbol}: $${price}`;
+
+            // Alert if price exceeds $150
+            if (price > 150) {
+                notification.style.color = "red";
+                alert(`Alert! ${symbol} is above $150!`);
+            } else {
+                notification.style.color = "green";
+            }
+
+            document.getElementById("notifications").appendChild(notification);
+        };
+
+        ws.onclose = () => {
+            console.log("Disconnected from the WebSocket server.");
+        };
+
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+    </script>
+</body>
+</html>
+
+```
 
