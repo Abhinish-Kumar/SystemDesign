@@ -283,6 +283,114 @@ console.log(lazyInstance1 === lazyInstance2); // true
 
 
 
+### **What is Double-Checked Locking in Singleton?**
+
+**Double-Checked Locking** is a technique used to make the Singleton design pattern **thread-safe** and efficient. It minimizes the synchronization overhead by ensuring that the critical section is accessed only when necessary.
+
+---
+
+### **Why Use Double-Checked Locking?**
+
+- In multi-threaded environments, multiple threads may try to create an instance of the Singleton simultaneously. This can lead to **race conditions**, resulting in the creation of multiple instances.
+- Double-checked locking ensures that the Singleton instance is created only once while reducing the performance overhead of acquiring locks unnecessarily.
+
+---
+
+### **How Double-Checked Locking Works**
+
+The core idea is to:
+1. **Check if the instance is `null` without acquiring a lock**.  
+   If it’s not `null`, return the existing instance.
+2. **Acquire a lock and check again if the instance is `null`** inside the synchronized block.  
+   If it’s still `null`, create the instance.
+
+This ensures that the lock is acquired only once when the instance is being created, improving performance.
+
+---
+
+### **Code Example: Double-Checked Locking in JavaScript**
+
+```javascript
+class DoubleCheckedSingleton {
+  static #instance = null; // Private static variable for the instance
+  static #lock = false;    // Lock flag for thread safety
+
+  // Private constructor to prevent direct instantiation
+  constructor() {
+    if (DoubleCheckedSingleton.#instance) {
+      throw new Error("Use DoubleCheckedSingleton.getInstance() to access the instance.");
+    }
+    console.log("Double-Checked Singleton Instance Created!");
+  }
+
+  // Static method to get the Singleton instance
+  static getInstance() {
+    if (!DoubleCheckedSingleton.#instance) { // First check (without lock)
+      if (!DoubleCheckedSingleton.#lock) {  // Check lock status
+        DoubleCheckedSingleton.#lock = true; // Lock the instance creation
+        if (!DoubleCheckedSingleton.#instance) { // Second check (inside lock)
+          DoubleCheckedSingleton.#instance = new DoubleCheckedSingleton();
+        }
+        DoubleCheckedSingleton.#lock = false; // Release the lock
+      }
+    }
+    return DoubleCheckedSingleton.#instance;
+  }
+
+  // Example method
+  showMessage() {
+    console.log("This is the Double-Checked Singleton Instance!");
+  }
+}
+
+// Usage
+const instance1 = DoubleCheckedSingleton.getInstance();
+const instance2 = DoubleCheckedSingleton.getInstance();
+
+console.log(instance1 === instance2); // true
+```
+
+---
+
+### **How Double-Checked Locking Solves Thread-Safety**
+
+1. **First Check (Outside Lock)**:  
+   - Avoids acquiring the lock unnecessarily if the instance already exists.
+
+2. **Second Check (Inside Lock)**:  
+   - Ensures that only one thread creates the instance, even if multiple threads enter the first check at the same time.
+
+---
+
+### **Advantages of Double-Checked Locking**
+
+1. **Thread Safety**:  
+   - Ensures that only one instance of the Singleton is created, even in multi-threaded environments.
+   
+2. **Performance Optimization**:  
+   - Reduces the overhead of acquiring a lock every time `getInstance` is called. The lock is used only during the first access when the instance is created.
+
+3. **Lazy Initialization**:  
+   - The instance is created only when it is first accessed, saving resources.
+
+---
+
+### **Disadvantages of Double-Checked Locking**
+
+1. **Complex Implementation**:  
+   - The code is more complex compared to simple locking mechanisms, which may lead to errors if not implemented correctly.
+
+2. **Not Always Needed**:  
+   - In single-threaded environments or cases where the Singleton instance is lightweight, simpler implementations may suffice.
+
+---
+
+### **When to Use Double-Checked Locking**
+
+- When you need a **thread-safe** Singleton in multi-threaded environments.
+- When **performance is critical**, and locking needs to be minimized.
+- When the Singleton instance is **expensive to create**, and lazy initialization is preferred.
+
 
 
 
